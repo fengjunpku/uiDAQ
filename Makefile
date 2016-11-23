@@ -28,6 +28,9 @@ CFLAGS = -Wall -O $(DIR_INC)
 
 all:$(OBJ)
 $(OBJ): $(MainFile) $(SourceFile) $(UserDict)
+	@echo "================================"
+	@echo "Compiling $@ ..."
+	@echo "================================"
 	$(GXX) $(CFLAGS) $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS) -o $@ $(MainFile) $(SourceFile) $(UserDict) 
 	@echo "================================"
 	@echo "Compile $@ done !"
