@@ -29,5 +29,7 @@ public:
   void HandleReturn();
   void Start();
   void Stop();
+
+  ClassDef(mainFrame,0)
 };
 #endif
