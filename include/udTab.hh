@@ -5,6 +5,7 @@
 #include <TGFrame.h>
 #include <TFrame.h>
 #include <TGTab.h>
+#include <TRootEmbeddedCanvas.h>
 
 #include "mainFrame.hh"
 

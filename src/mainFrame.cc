@@ -94,5 +94,5 @@ void mainFrame::HandleReturn()
    cmd = dir+cmd;
    *pTextView << gSystem->GetFromPipe(cmd).Data() << std::endl;
    pTextView->ShowBottom();
-   //pCommand->Clear();
+   pCommand->Clear();
 }
