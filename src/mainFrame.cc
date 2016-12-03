@@ -2,6 +2,7 @@
 
 mainFrame::mainFrame(const TGWindow *p,UInt_t w,UInt_t h) : TGMainFrame(p,w,h)
 { 
+  isRecord = kFALSE;
   //frames
   pMain = new TGVerticalFrame(this);
   pPathFrame = new TGHorizontalFrame(pMain);
@@ -21,10 +22,14 @@ mainFrame::mainFrame(const TGWindow *p,UInt_t w,UInt_t h) : TGMainFrame(p,w,h)
   //command
   pCommand = new TGTextEntry(pCommandFrame,(const char *)"",20);
   pCommand->Connect("ReturnPressed()","mainFrame",this,"HandleReturn()");
-  pCommandFrame->AddFrame(new TGLabel(pCommandFrame, "Command: "),
-                          new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 5, 5, 5, 5));
+  pCommandFrame->AddFrame(new TGLabel(pCommandFrame, "Command: "), new TGLayoutHints(kLHintsCenterY | kLHintsLeft, 5, 5, 5, 5));
   pCommandFrame->AddFrame(pCommand,new TGLayoutHints(kLHintsExpandX, 5, 5, 5, 5));
   pMain->AddFrame(pCommandFrame,new TGLayoutHints(kLHintsExpandX, 5, 5, 5, 5));
+  //check button
+  pRecord = new TGCheckButton(pFunctionFrame, "Record\nOn/Off");
+  pRecord->SetOn(0);
+  pRecord->Connect("Toggled(Bool_t)","mainFrame",this,"SetRecord(Bool_t)");
+  pFunctionFrame->AddFrame(pRecord, new TGLayoutHints(kLHintsLeft| kLHintsTop, 5, 5, 5, 5));
   //buttons
   pStart = new TGTextButton(pFunctionFrame,"&Start");
   pStart->SetToolTipText("Start DAQ");
@@ -32,20 +37,17 @@ mainFrame::mainFrame(const TGWindow *p,UInt_t w,UInt_t h) : TGMainFrame(p,w,h)
   pFunctionFrame->AddFrame(pStart,new TGLayoutHints(kLHintsExpandX | kLHintsTop, 5, 5, 5, 5));
 
   pStop = new TGTextButton(pFunctionFrame,"&Stop");
-  pStart->SetToolTipText("Stop DAQ");
+  pStop->SetToolTipText("Stop DAQ");
   pStop->Connect("Clicked()","mainFrame",this,"Stop()");
+  pStop->SetEnabled(0);
   pFunctionFrame->AddFrame(pStop,new TGLayoutHints(kLHintsExpandX | kLHintsTop, 5, 5, 5, 5));
 
 
-  pReset = new TGTextButton(pButtonFrame,"&Reset");
+  pReset = new TGTextButton(pFunctionFrame,"&CLear");
   pReset->SetToolTipText("Press to clear the command entry\nand the TextView",200);
   pReset->Connect("Clicked()","mainFrame",this,"Reset()");
-  pButtonFrame->AddFrame(pReset,new TGLayoutHints(kLHintsExpandX | kLHintsTop, 5, 5, 5, 5));
+  pFunctionFrame->AddFrame(pReset,new TGLayoutHints(kLHintsExpandX | kLHintsTop, 5, 5, 5, 5));
 
-  pExit = new TGTextButton(pButtonFrame,"&Exit");
-  pExit->SetToolTipText("Terminate the application",200);
-  pExit->Connect("Pressed()", "TApplication", gApplication, "Terminate()");
-  pButtonFrame->AddFrame(pExit,new TGLayoutHints(kLHintsExpandX | kLHintsTop, 5, 5, 5, 5));
 
   pMain->AddFrame(pFunctionFrame,new TGLayoutHints(kLHintsTop | kLHintsExpandX, 0, 0, 0, 0));
   pMain->AddFrame(pButtonFrame,new TGLayoutHints(kLHintsTop | kLHintsExpandX, 0, 0, 0, 0));
@@ -75,9 +77,14 @@ void mainFrame::Reset()
 void mainFrame::Start()
 {
   TString cmd(pPath->GetText());
-  cmd += " localhost start";
+  if(isRecord)
+    cmd += " localhost start";
+  else
+    cmd += " localhost nssta";
   *pTextView<<cmd.Data()<<std::endl;
   pTextView->ShowBottom();
+  pStart->SetEnabled(0);
+  pStop->SetEnabled();
 }
 
 void mainFrame::Stop()
@@ -86,6 +93,8 @@ void mainFrame::Stop()
   cmd += " localhost stop";
   *pTextView<<cmd.Data()<<std::endl;
   pTextView->ShowBottom();
+  pStart->SetEnabled();
+  pStop->SetEnabled(0);
 }
 void mainFrame::HandleReturn()
 {
@@ -95,4 +104,9 @@ void mainFrame::HandleReturn()
    *pTextView << gSystem->GetFromPipe(cmd).Data() << std::endl;
    pTextView->ShowBottom();
    pCommand->Clear();
+}
+void mainFrame::SetRecord(Bool_t r)
+{
+  isRecord = r;
+  //*pTextView << isRecord << std::endl;
 }

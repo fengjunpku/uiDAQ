@@ -12,13 +12,19 @@ udTab::udTab(const TGWindow *p,UInt_t w,UInt_t h) : TGMainFrame(p,w,h)
 
   pTab = new TGTab(this,800,800);
   //--------- create an tab element
-  TGCompositeFrame *tf = pTab->AddTab("DAQ");
+  TGCompositeFrame *tf = pTab->AddTab("Init");
+  TGCompositeFrame *tabinit = new TGCompositeFrame(tf, 500, 500, kHorizontalFrame);
+  pInit = new initFrame(tabinit,300,300);
+  tabinit->AddFrame(pInit,new TGLayoutHints(kLHintsTop | kLHintsLeft | kLHintsExpandX | kLHintsExpandY, 5, 5, 5, 5));
+  tf->AddFrame(tabinit,new TGLayoutHints(kLHintsTop | kLHintsLeft, 5, 5, 5, 5));
+  //********
+  tf = pTab->AddTab("DAQ");
   TGCompositeFrame *tabframe = new TGCompositeFrame(tf, 500, 500, kHorizontalFrame);
   pContent = new mainFrame(tabframe,300,300);
   tabframe->AddFrame(pContent,new TGLayoutHints(kLHintsTop | kLHintsLeft | kLHintsExpandX | kLHintsExpandY, 5, 5, 5, 5));
   tf->AddFrame(tabframe,new TGLayoutHints(kLHintsTop | kLHintsLeft, 5, 5, 5, 5));
 
-  tf = pTab->AddTab("Init");
+  
 
   //---------------
   AddFrame(pTab, new TGLayoutHints(kLHintsBottom | kLHintsExpandX | kLHintsExpandY, 2, 2, 2, 2));
@@ -26,6 +32,7 @@ udTab::udTab(const TGWindow *p,UInt_t w,UInt_t h) : TGMainFrame(p,w,h)
   Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
   DontCallClose();
   MapSubwindows();
+  SetWindowName("DAQ Demo");
   Resize();   // resize to default size
   MapWindow();
 }

@@ -5,5 +5,6 @@
 #pragma link off all functions;
 
 #pragma link C++ class mainFrame+;
+#pragma link C++ class initFrame+;
 //#pragma link C++ class vector<JunParticle>+;
 #endif

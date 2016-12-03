@@ -17,11 +17,13 @@
 class mainFrame : public TGMainFrame
 {
 private:
-  TGTextButton      *pReset,*pExit,*pStart,*pStop;
+  TGTextButton      *pReset,*pStart,*pStop;
+  TGCheckButton     *pRecord;
   TGTextViewostream *pTextView;
   TGVerticalFrame   *pMain;
   TGHorizontalFrame *pFunctionFrame,*pButtonFrame,*pCommandFrame,*pPathFrame;
   TGTextEntry       *pCommand,*pPath;
+  Bool_t isRecord;
 public:
   mainFrame(const TGWindow *p,UInt_t w,UInt_t h);
   virtual ~mainFrame();
@@ -29,6 +31,7 @@ public:
   void HandleReturn();
   void Start();
   void Stop();
+  void SetRecord(Bool_t r);
 
   ClassDef(mainFrame,0)
 };
