@@ -51,6 +51,12 @@ mainFrame::mainFrame(const TGWindow *p,UInt_t w,UInt_t h) : TGMainFrame(p,w,h)
 
   pMain->AddFrame(pFunctionFrame,new TGLayoutHints(kLHintsTop | kLHintsExpandX, 0, 0, 0, 0));
   pMain->AddFrame(pButtonFrame,new TGLayoutHints(kLHintsTop | kLHintsExpandX, 0, 0, 0, 0));
+  //status
+  Int_t parts[] = {25,25,25,25};
+  pStatus = new TGStatusBar(pMain,300,20,kVerticalFrame);
+  pStatus->SetParts(parts,4);
+  pStatus->Draw3DCorner(kFALSE);
+  pMain->AddFrame(pStatus, new TGLayoutHints(kLHintsExpandX, 0, 0, 0, 0));
   //main
   Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
   DontCallClose();
@@ -61,6 +67,9 @@ mainFrame::mainFrame(const TGWindow *p,UInt_t w,UInt_t h) : TGMainFrame(p,w,h)
 
   SetWindowName("DAQ demo");
   MapRaised();
+  //timer
+  pTimer = new TTimer(2000);
+  pTimer->Connect("Timeout()", "mainFrame", this, "Test()");
 }
 
 mainFrame::~mainFrame()
@@ -85,6 +94,8 @@ void mainFrame::Start()
   pTextView->ShowBottom();
   pStart->SetEnabled(0);
   pStop->SetEnabled();
+
+  pTimer->TurnOn();
 }
 
 void mainFrame::Stop()
@@ -95,6 +106,8 @@ void mainFrame::Stop()
   pTextView->ShowBottom();
   pStart->SetEnabled();
   pStop->SetEnabled(0);
+
+  pTimer->TurnOff();
 }
 void mainFrame::HandleReturn()
 {
@@ -109,4 +122,14 @@ void mainFrame::SetRecord(Bool_t r)
 {
   isRecord = r;
   //*pTextView << isRecord << std::endl;
+}
+
+void mainFrame::Test()
+{
+  pStatus->SetText("data0001.ridf",0);
+  int i=0;
+  TRandom3 r(0);
+  char buff[20];
+  sprintf(buff,"%02.4f",r.Uniform());
+  pStatus->SetText(buff,1);
 }

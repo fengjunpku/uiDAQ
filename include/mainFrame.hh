@@ -13,6 +13,8 @@
 #include <TGNumberEntry.h>
 #include <TGLabel.h>
 #include <TString.h>
+#include <TTimer.h>
+#include <TRandom3.h>
 
 class mainFrame : public TGMainFrame
 {
@@ -23,6 +25,8 @@ private:
   TGVerticalFrame   *pMain;
   TGHorizontalFrame *pFunctionFrame,*pButtonFrame,*pCommandFrame,*pPathFrame;
   TGTextEntry       *pCommand,*pPath;
+  TGStatusBar *pStatus;
+  TTimer *pTimer;
   Bool_t isRecord;
 public:
   mainFrame(const TGWindow *p,UInt_t w,UInt_t h);
@@ -32,6 +36,7 @@ public:
   void Start();
   void Stop();
   void SetRecord(Bool_t r);
+  void Test();
 
   ClassDef(mainFrame,0)
 };
